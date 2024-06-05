@@ -7,7 +7,12 @@ export enum ListenerState {
 
 export type ListenerTimings = {
   start: number;
+  breaks: {
+    start: number;
+    end?: number;
+  }[];
   lastAction: number;
+  totalListeningTime: number;
 }
 
 export type ListenersDetails = {

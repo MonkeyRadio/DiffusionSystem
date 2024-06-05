@@ -4,12 +4,25 @@ import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { randomBytes } from 'crypto';
 import { DAYS_IN_MILLISECOND, MINUTES_IN_MILLISECOND } from 'utils/timeConstants';
 import { Listener } from './listener';
+import { Pagination } from 'src/pagination-param/pagination-param.decorator';
+import { PaginatedReponse, paginatedResponse } from 'src/pagination-param/paginated-response';
 
 @Injectable()
 export class ListenersService {
   private listeners: Record<string, Listener> = {};
 
   constructor(private schedulerRegistry: SchedulerRegistry) {}
+
+  public getListeners(pagination: Pagination): PaginatedReponse<Record<string, Listener>>{
+    let paginatedListeners: Record<string, Listener> = {};
+    const listeners = Object.entries(this.listeners);
+    const start = pagination.page * pagination.limit;
+    const end = start + pagination.limit;
+    for (let i = start; i < end && i < listeners.length; i++) {
+      paginatedListeners[listeners[i][0]] = listeners[i][1];
+    }
+    return paginatedResponse(paginatedListeners, listeners.length, pagination);
+  }
 
   public getListener(id: string): Listener {
     if (!this.listeners[id]) {
@@ -28,6 +41,16 @@ export class ListenersService {
   }
 
   public addListener(userAgent: string, listenersDetails?: ListenersDetails): { id: string; listener: Listener; } {
+    if (listenersDetails?.webappUuid) {
+      const listenerId = Object.keys(this.listeners).find(listenerId => this.listeners[listenerId]?.getListenersDetails()?.webappUuid === listenersDetails?.webappUuid);
+      if (listenerId) {
+        return {
+          id: listenerId,
+          listener: this.getListener(listenerId),
+        };
+      }
+    }
+
     const listenerId = this.calculateNewListenerId();
     const listener = this.listeners[listenerId] = new Listener(userAgent, listenersDetails);
     return {

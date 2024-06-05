@@ -34,4 +34,12 @@ export class HlsDiffController {
     }
   }
 
+  @Get('end/:listenerId')
+  endListener(@Param('listenerId') listenerId: string): void {
+    try {
+      this.hlsDiffService.endListener(listenerId);
+    } catch (e) {
+      throw new NotFoundException();
+    }
+  }
 }

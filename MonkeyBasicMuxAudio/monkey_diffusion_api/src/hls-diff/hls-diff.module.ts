@@ -1,10 +1,13 @@
 import { Module } from '@nestjs/common';
 import { HlsDiffService } from './hls-diff.service';
 import { HlsDiffController } from './hls-diff.controller';
-import { ListenersService } from 'src/listeners/listeners.service';
+import { ListenersModule } from 'src/listeners/listeners.module';
 
 @Module({
   controllers: [HlsDiffController],
-  providers: [HlsDiffService, ListenersService],
+  providers: [HlsDiffService],
+  imports: [
+    ListenersModule,
+  ]
 })
 export class HlsDiffModule {}

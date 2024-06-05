@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { readFile } from 'fs/promises';
 import { ListenersService } from 'src/listeners/listeners.service';
-import { ListenersDetails } from 'src/listeners/types/Listeners';
+import { ListenersDetails, ListenerState } from 'src/listeners/types/Listeners';
 
 @Injectable()
 export class HlsDiffService {
@@ -39,6 +39,7 @@ export class HlsDiffService {
   public getContentPath(listenerId: string, contentId: string): string {
     const sharedPath = this.configService.get<string>('STREAMS_SHARED_PATH');
     const listener = this.listenersService.getListener(listenerId);
+    listener.setState(ListenerState.PLAYING);
     return `${sharedPath}/${listener.getManifestId()}/${contentId}`;
   }
 
