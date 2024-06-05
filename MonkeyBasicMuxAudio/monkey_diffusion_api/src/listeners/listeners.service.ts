@@ -13,9 +13,12 @@ export class ListenersService {
 
   constructor(private schedulerRegistry: SchedulerRegistry) {}
 
-  public getListeners(pagination: Pagination): PaginatedReponse<Record<string, Listener>>{
+  public getListeners(pagination: Pagination, onlyPlaying?: boolean): PaginatedReponse<Record<string, Listener>>{
     let paginatedListeners: Record<string, Listener> = {};
-    const listeners = Object.entries(this.listeners);
+    let listeners = Object.entries(this.listeners);
+    if (onlyPlaying) {
+      listeners = listeners.filter(([_, listener]) => listener.getState() === ListenerState.PLAYING);
+    }
     const start = pagination.page * pagination.limit;
     const end = start + pagination.limit;
     for (let i = start; i < end && i < listeners.length; i++) {

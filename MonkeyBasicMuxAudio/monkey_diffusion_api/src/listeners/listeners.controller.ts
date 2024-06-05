@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
 import { ListenersService } from './listeners.service';
 import { BasicAuthTokenGuard } from 'src/basic-auth-token/basic-auth-token.guard';
 import { Pagination, PaginationParams } from 'src/pagination-param/pagination-param.decorator';
@@ -9,7 +9,7 @@ export class ListenersController {
 
   @UseGuards(BasicAuthTokenGuard)
   @Get()
-  getListeners(@PaginationParams() paginationParams: Pagination) {
-    return this.listenersService.getListeners(paginationParams);
+  getListeners(@PaginationParams() paginationParams: Pagination, @Query('onlyPlaying') onlyPlaying: boolean) {
+    return this.listenersService.getListeners(paginationParams, onlyPlaying);
   }
 }
