@@ -1,0 +1,180 @@
+<icecast>
+    <location>MonkeyRadio</location>
+    <admin>icemaster@monkeyradio.fr</admin>
+
+    <limits>
+        <clients>20000000</clients>
+        <sources>200</sources>
+        <queue-size>524288</queue-size>
+        <client-timeout>30</client-timeout>
+        <header-timeout>15</header-timeout>
+        <source-timeout>10</source-timeout>
+        <burst-size>65535</burst-size>
+    </limits>
+
+    <authentication>
+        <source-password>{{source password}}</source-password>
+        <relay-password>{{relay password}}</relay-password>
+
+        <admin-user>admin</admin-user>
+        <admin-password>{{admin password}}</admin-password>
+    </authentication>
+
+    <hostname>monkeyradio.fr</hostname>
+
+    <listen-socket>
+        <port>8000</port>
+    </listen-socket>
+
+    <http-headers>
+        <header name="Access-Control-Allow-Origin" value="*" />
+	<header name="Allow" value="HEAD" />
+    </http-headers>
+
+
+    <!-- Relaying
+         You don't need this if you only have one server.
+         Please refer to the documentation for a detailed explanation.
+    -->
+    <!--<master-server>127.0.0.1</master-server>-->
+    <!--<master-server-port>8001</master-server-port>-->
+    <!--<master-update-interval>120</master-update-interval>-->
+    <!--<master-password>hackme</master-password>-->
+
+    <!-- setting this makes all relays on-demand unless overridden, this is
+         useful for master relays which do not have <relay> definitions here.
+         The default is 0 -->
+    <!--<relays-on-demand>1</relays-on-demand>-->
+
+    <!--
+    <relay>
+        <server>127.0.0.1</server>
+        <port>8080</port>
+        <mount>/example.ogg</mount>
+        <local-mount>/different.ogg</local-mount>
+        <on-demand>0</on-demand>
+
+        <relay-shoutcast-metadata>0</relay-shoutcast-metadata>
+    </relay>
+    -->
+
+
+    <!-- Mountpoints
+         Only define <mount> sections if you want to use advanced options,
+         like alternative usernames or passwords
+    -->
+
+    <!-- Normal mounts -->
+    <!--
+    <mount type="normal">
+        <mount-name>/example-complex.ogg</mount-name>
+
+        <username>othersource</username>
+        <password>hackmemore</password>
+
+        <max-listeners>1</max-listeners>
+        <dump-file>/tmp/dump-example1.ogg</dump-file>
+        <burst-size>65536</burst-size>
+        <fallback-mount>/example2.ogg</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <fallback-when-full>1</fallback-when-full>
+        <intro>/example_intro.ogg</intro>
+        <hidden>1</hidden>
+        <public>1</public>
+        <authentication type="htpasswd">
+                <option name="filename" value="myauth"/>
+                <option name="allow_duplicate_users" value="0"/>
+        </authentication>
+        <http-headers>
+                <header name="Access-Control-Allow-Origin" value="http://webplayer.example.org" />
+                <header name="baz" value="quux" />
+        </http-headers>
+        <on-connect>/home/icecast/bin/stream-start</on-connect>
+        <on-disconnect>/home/icecast/bin/stream-stop</on-disconnect>
+    </mount>
+    -->
+
+    <mount type="normal">
+        <mount-name>/monkey-aac-low</mount-name>
+        <max-listeners>10000000</max-listeners>
+        <burst-size>32000</burst-size>
+        <hidden>false</hidden>
+        <public>false</public>
+    </mount>
+
+    <mount type="normal">
+        <mount-name>/monkey-aac-mid</mount-name>
+        <max-listeners>5000000</max-listeners>
+        <burst-size>128000</burst-size>
+        <fallback-mount>/monkey-aac-low</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <fallback-when-full>1</fallback-when-full>
+        <hidden>false</hidden>
+        <public>false</public>
+    </mount>
+
+    <mount type="normal">
+        <mount-name>/monkey-aac-high</mount-name>
+        <max-listeners>1000000</max-listeners>
+        <burst-size>576000</burst-size>
+        <fallback-mount>/monkey-aac-mid</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <fallback-when-full>1</fallback-when-full>
+        <hidden>false</hidden>
+        <public>false</public>
+    </mount>
+
+    <mount type="normal">
+        <mount-name>/monkey-flac-lossless</mount-name>
+        <max-listeners>500000</max-listeners>
+        <burst-size>1024000</burst-size>
+        <fallback-mount>/monkey-aac-high</fallback-mount>
+        <fallback-override>1</fallback-override>
+        <fallback-when-full>1</fallback-when-full>
+        <hidden>false</hidden>
+        <public>false</public>
+    </mount>
+
+    <fileserve>1</fileserve>
+
+    <paths>
+        <basedir>/usr/share/icecast2</basedir>
+
+        <logdir>/var/log/icecast2</logdir>
+        <webroot>/usr/share/icecast2/web</webroot>
+        <adminroot>/usr/share/icecast2/admin</adminroot>
+        <!--
+        <alias source="/foo" destination="/bar"/>
+        -->
+        <!-- Aliases: can also be used for simple redirections as well,
+             this example will redirect all requests for http://server:port/ to
+             the status page
+        -->
+        <alias source="/" destination="/status.xsl"/>
+    </paths>
+
+
+    <logging>
+        <accesslog>access.log</accesslog>
+        <errorlog>error.log</errorlog>
+        <!-- <playlistlog>playlist.log</playlistlog> -->
+        <loglevel>1</loglevel> <!-- 4 Debug, 3 Info, 2 Warn, 1 Error -->
+        <logsize>10000</logsize> <!-- Max size of a logfile -->
+        <!-- If logarchive is enabled (1), then when logsize is reached
+             the logfile will be moved to [error|access|playlist].log.DATESTAMP,
+             otherwise it will be moved to [error|access|playlist].log.old.
+             Default is non-archive mode (i.e. overwrite)
+        -->
+        <!-- <logarchive>1</logarchive> -->
+    </logging>
+
+    <security>
+        <chroot>0</chroot>
+        <!--
+        <changeowner>
+            <user>nobody</user>
+            <group>nogroup</group>
+        </changeowner>
+        -->
+    </security>
+</icecast>

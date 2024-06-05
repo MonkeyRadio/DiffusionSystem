@@ -1,0 +1,32 @@
+services:
+  liquidsoap:
+    image: "savonet/liquidsoap:v2.2.5"
+    container_name: liquidsoap
+    restart: always
+    volumes:
+      - ./liquidsoap/confs:/etc/liquidsoap
+      - ./shared/stream_output:/output
+      - ./liquidsoap/persist_output:/persist_output
+    ports:
+      - "$LIQUIDSOAP_PORT:8000"
+    command: "liquidsoap /etc/liquidsoap/basic.liq"
+
+  # icecast:
+  #   image: "pltnk/icecast2"
+  #   container_name: icecast2
+  #   restart: always
+  #   ports:
+  #     - $ICECAST_PORT:8000
+  #   volumes:
+  #     - ./icecast/icecast.prod.xml:/etc/icecast2/icecast.xml
+
+  # mediamtx:
+  #   image: "bluenviron/mediamtx:latest-ffmpeg"
+  #   container_name: mediamtx
+  #   restart: always
+  #   ports:
+  #     - $MEDIAMTX_HLS_PORT:8888
+  #     - $MEDIAMTX_RTMP_PORT:1935
+  #     - $MEDIAMTX_API_PORT:9997
+  #   volumes:
+  #     - ./mediamtx/mediamtx.yml:/mediamtx.yml
