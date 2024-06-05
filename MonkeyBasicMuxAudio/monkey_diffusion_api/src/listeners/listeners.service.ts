@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ListenersDetails, ListenerState } from './types/Listeners';
 import { Cron, SchedulerRegistry } from '@nestjs/schedule';
 import { randomBytes } from 'crypto';
-import { DAYS_IN_MILLISECOND, MINUTES_IN_MILLISECOND } from 'utils/timeConstants';
+import { DAYS_IN_MILLISECOND, MINUTES_IN_MILLISECOND } from 'src/utils/timeConstants';
 import { Listener } from './listener';
 import { Pagination } from 'src/pagination-param/pagination-param.decorator';
 import { PaginatedReponse, paginatedResponse } from 'src/pagination-param/paginated-response';
