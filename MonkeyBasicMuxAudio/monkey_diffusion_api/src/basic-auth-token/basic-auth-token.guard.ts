@@ -9,7 +9,7 @@ export class BasicAuthTokenGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    const EnvToken = this.configService.get<string>('BASIC_AUTH_TOKEN');
+    const EnvToken = this.configService.get<string>('DIFFUSION_API_BASIC_AUTH_TOKEN');
     if (!EnvToken)
       return false;
     if (EnvToken === 'INSECURE-NOAUTH')

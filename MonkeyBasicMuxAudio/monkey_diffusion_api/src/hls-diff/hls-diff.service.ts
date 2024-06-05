@@ -29,7 +29,7 @@ export class HlsDiffService {
       listenerDetails?: ListenersDetails;
     }
   ): Promise<string> {
-    const sharedPath = this.configService.get<string>('STREAMS_SHARED_PATH');
+    const sharedPath = this.configService.get<string>('DIFFUSION_API_STREAMS_SHARED_PATH');
     const manifestFile = await readFile(`${sharedPath}/${manifestId}/${manifestId}.m3u8`, 'utf8');
     const {id: listenerId, listener: listener} = this.listenersService.addListener(userAgent, opts?.listenerDetails);
     listener.setManifestId(manifestId);
@@ -37,7 +37,7 @@ export class HlsDiffService {
   }
 
   public getContentPath(listenerId: string, contentId: string): string {
-    const sharedPath = this.configService.get<string>('STREAMS_SHARED_PATH');
+    const sharedPath = this.configService.get<string>('DIFFUSION_API_STREAMS_SHARED_PATH');
     const listener = this.listenersService.getListener(listenerId);
     listener.setState(ListenerState.PLAYING);
     return `${sharedPath}/${listener.getManifestId()}/${contentId}`;

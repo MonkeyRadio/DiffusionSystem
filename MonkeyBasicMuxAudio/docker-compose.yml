@@ -11,6 +11,19 @@ services:
       - "$LIQUIDSOAP_PORT:8000"
     command: "liquidsoap /etc/liquidsoap/basic.liq"
 
+  diffusion_api:
+    build:
+      context: ./monkey_diffusion_api
+      dockerfile: docker/Dockerfile
+    container_name: diffusion_api
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./shared:/shared
+    ports:
+      - "$DIFFUSION_API_PORT:3000"
+
   # icecast:
   #   image: "pltnk/icecast2"
   #   container_name: icecast2
