@@ -96,6 +96,13 @@
 
     <!-- Studios MP -->
     <mount type="normal">
+        <mount-name>/natio</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+    <mount type="normal">
         <mount-name>/monkey-stud-0</mount-name>
         <max-listeners>100</max-listeners>
         <burst-size>0</burst-size>

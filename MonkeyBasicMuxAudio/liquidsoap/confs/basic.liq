@@ -6,7 +6,7 @@ log.level := 2
 init.allow_root := true
 
 # Sources
-natio = input.http("https://audio.monkeyradio.fr/diffusion/ice/monkey_mp3_mid")
+natio = input.http(ice_output_url ^ "/natio")
 
 stud0 = input.http(ice_output_url ^ "/stud0")
 
