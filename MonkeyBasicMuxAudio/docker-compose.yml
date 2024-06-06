@@ -1,6 +1,7 @@
 services:
   liquidsoap:
-    image: "savonet/liquidsoap:v2.2.5"
+    build:
+      context: ./liquidsoap
     container_name: liquidsoap
     restart: always
     volumes:
