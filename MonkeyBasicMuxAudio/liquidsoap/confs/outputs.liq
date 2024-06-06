@@ -36,14 +36,14 @@ def hls_output(stream, stream_name)
 
   def segment_name(~position,~extname,stream_name) =
     timestamp = int_of_float(time())
-    duration = 2
+    duration = 4
     "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
   end
 
   output.file.hls(playlist="#{stream_name}.m3u8",
                   temp_dir="/shared/stream_output/tmp",
-                  segment_duration=2.0,
-                  segments=1800,
+                  segment_duration=4.0,
+                  segments=900,
                   segments_overhead=5,
                   segment_name=segment_name,
                   persist_at="/persist_output/#{stream_name}/state.config",
