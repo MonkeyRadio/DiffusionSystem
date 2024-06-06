@@ -5,7 +5,7 @@ services:
     restart: always
     volumes:
       - ./liquidsoap/confs:/etc/liquidsoap
-      - ./shared/stream_output:/output
+      - ./shared:/shared
       - ./liquidsoap/persist_output:/persist_output
     ports:
       - "$LIQUIDSOAP_PORT:8000"

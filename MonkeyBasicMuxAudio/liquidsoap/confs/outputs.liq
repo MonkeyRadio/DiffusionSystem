@@ -1,6 +1,6 @@
 %include "icecast_creds.liq"
 
-file.mkdir("/output/tmp")
+file.mkdir("/shared/stream_output/tmp")
 
 def hls_output(stream, stream_name)  
 
@@ -40,13 +40,13 @@ def hls_output(stream, stream_name)
   end
 
   output.file.hls(playlist="#{stream_name}.m3u8",
-                  temp_dir="/output/tmp",
+                  temp_dir="/shared/stream_output/tmp",
                   segment_duration=2.0,
                   segments=1800,
                   segments_overhead=5,
                   segment_name=segment_name,
                   persist_at="/persist_output/#{stream_name}/state.config",
-                  "/output/#{stream_name}",
+                  "/shared/stream_output/#{stream_name}",
                   streams_nfo,
                   stream)
 end
