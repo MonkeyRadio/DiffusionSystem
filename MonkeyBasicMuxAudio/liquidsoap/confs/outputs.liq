@@ -1,3 +1,5 @@
+%include "icecast_creds.liq"
+
 file.mkdir("/output/tmp")
 
 def hls_output(stream, stream_name)  
@@ -47,4 +49,21 @@ def hls_output(stream, stream_name)
                   "/output/#{stream_name}",
                   streams_nfo,
                   stream)
+end
+
+
+def ice_output(stream)
+  output.icecast(%fdkaac(channels=2, samplerate=44100, bandwidth="auto", bitrate=64, aot="mpeg4_he_aac_v2", afterburner=false, transmux="adts", sbr_mode=false),    
+    host = ice_output_host,
+    port = ice_output_port,
+    password = ice_output_source_pwd,
+    mount = "monkey-aac-mid",
+    stream)
+
+  output.icecast(%fdkaac(channels=2, samplerate=48000, bandwidth="auto", bitrate=320, aot="mpeg4_aac_lc", afterburner=false, transmux="adts", sbr_mode=false),    
+    host = ice_output_host,
+    port = ice_output_port,
+    password = ice_output_source_pwd,
+    mount = "monkey-aac-high",
+    stream)
 end

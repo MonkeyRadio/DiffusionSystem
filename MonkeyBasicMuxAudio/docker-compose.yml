@@ -24,22 +24,11 @@ services:
     ports:
       - "$DIFFUSION_API_PORT:3000"
 
-  # icecast:
-  #   image: "pltnk/icecast2"
-  #   container_name: icecast2
-  #   restart: always
-  #   ports:
-  #     - $ICECAST_PORT:8000
-  #   volumes:
-  #     - ./icecast/icecast.prod.xml:/etc/icecast2/icecast.xml
-
-  # mediamtx:
-  #   image: "bluenviron/mediamtx:latest-ffmpeg"
-  #   container_name: mediamtx
-  #   restart: always
-  #   ports:
-  #     - $MEDIAMTX_HLS_PORT:8888
-  #     - $MEDIAMTX_RTMP_PORT:1935
-  #     - $MEDIAMTX_API_PORT:9997
-  #   volumes:
-  #     - ./mediamtx/mediamtx.yml:/mediamtx.yml
+  icecast:
+    image: "pltnk/icecast2"
+    container_name: icecast2
+    restart: always
+    ports:
+      - $ICECAST_PORT:8000
+    volumes:
+      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml

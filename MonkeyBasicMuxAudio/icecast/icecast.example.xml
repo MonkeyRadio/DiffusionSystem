@@ -94,6 +94,43 @@
     </mount>
     -->
 
+    <!-- Studios MP -->
+    <mount type="normal">
+        <mount-name>/monkey-stud-0</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+    <mount type="normal">
+        <mount-name>/monkey-stud-1</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+    <mount type="normal">
+        <mount-name>/monkey-stud-2</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+    <mount type="normal">
+        <mount-name>/monkey-stud-3</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+    <mount type="normal">
+        <mount-name>/monkey-stud-4</mount-name>
+        <max-listeners>100</max-listeners>
+        <burst-size>0</burst-size>
+        <hidden>true</hidden>
+        <public>false</public>
+    </mount>
+
     <mount type="normal">
         <mount-name>/monkey-aac-low</mount-name>
         <max-listeners>10000000</max-listeners>
