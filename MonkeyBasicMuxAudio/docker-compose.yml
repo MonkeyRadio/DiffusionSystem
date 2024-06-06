@@ -8,6 +8,8 @@ services:
       - ./liquidsoap/confs:/etc/liquidsoap
       - ./shared:/shared
       - ./liquidsoap/persist_output:/persist_output
+    networks:
+      - default
     ports:
       - "$LIQUIDSOAP_PORT:8000"
     command: "liquidsoap /etc/liquidsoap/basic.liq"
@@ -22,6 +24,8 @@ services:
       - ./.env
     volumes:
       - ./shared:/shared
+    networks:
+      - default
     ports:
       - "$DIFFUSION_API_PORT:3000"
 
@@ -33,3 +37,8 @@ services:
       - $ICECAST_PORT:8000
     volumes:
       - ./icecast/icecast.xml:/etc/icecast2/icecast.xml
+    networks:
+      - default
+
+networks:
+  default:
