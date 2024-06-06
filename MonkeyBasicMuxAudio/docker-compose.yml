@@ -11,7 +11,7 @@ services:
     networks:
       - default
     ports:
-      - "$LIQUIDSOAP_PORT:8000"
+      - "$LIQUIDSOAP_HTTP_PORT:7000"
     command: "liquidsoap /etc/liquidsoap/basic.liq"
 
   diffusion_api:
