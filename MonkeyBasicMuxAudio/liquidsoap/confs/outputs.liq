@@ -1,5 +1,6 @@
 %include "icecast_creds.liq"
 
+file.mkdir("/shared/stream_output")
 file.mkdir("/shared/stream_output/tmp")
 
 def hls_output(stream, stream_name)  
