@@ -1,3 +1,4 @@
 *.prod.*
 .env
 cc.log
+*.mp3
