@@ -14,7 +14,7 @@ import { Response } from 'express';
 export class HlsDiffController {
   constructor(private readonly hlsDiffService: HlsDiffService) {}
 
-  @Get('content/:listenerId/:contentId')
+  @Get(':radioId/content/:listenerId/:contentId')
   getContentPath(
     @Param('listenerId') listenerId: string,
     @Param('contentId') contentId: string,
@@ -52,7 +52,7 @@ export class HlsDiffController {
     }
   }
 
-  @Get('end/:listenerId')
+  @Get(':radioId/end/:listenerId')
   endListener(@Param('listenerId') listenerId: string): void {
     try {
       this.hlsDiffService.endListener(listenerId);
