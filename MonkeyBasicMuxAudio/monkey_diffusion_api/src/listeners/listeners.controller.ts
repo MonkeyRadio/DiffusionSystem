@@ -1,15 +1,35 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  DefaultValuePipe,
+  Get,
+  ParseBoolPipe,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { ListenersService } from './listeners.service';
-import { BasicAuthTokenGuard } from 'src/basic-auth-token/basic-auth-token.guard';
-import { Pagination, PaginationParams } from 'src/pagination-param/pagination-param.decorator';
+import {
+  Pagination,
+  PaginationParams,
+} from 'src/pagination-param/pagination-param.decorator';
+import { MustBe } from 'src/api-accredit/decorators/must-be.decorator';
+import { ApiAccreditGuard } from 'src/api-accredit/api-accredit.guard';
+import { UserRole } from '@/shared/api/enums/user-role.enum';
 
 @Controller('listeners')
 export class ListenersController {
   constructor(private readonly listenersService: ListenersService) {}
 
-  @UseGuards(BasicAuthTokenGuard)
+  @MustBe(UserRole.StatsViewer)
+  @UseGuards(ApiAccreditGuard)
   @Get()
-  getListeners(@PaginationParams() paginationParams: Pagination, @Query('onlyPlaying') onlyPlaying: boolean) {
-    return this.listenersService.getListeners(paginationParams, onlyPlaying);
+  getListeners(
+    @PaginationParams() paginationParams: Pagination,
+    @Query('onlyPlaying', new DefaultValuePipe(false), ParseBoolPipe)
+    onlyPlaying: boolean,
+  ) {
+    return this.listenersService.toPaginatedResponse(
+      paginationParams,
+      onlyPlaying,
+    );
   }
 }

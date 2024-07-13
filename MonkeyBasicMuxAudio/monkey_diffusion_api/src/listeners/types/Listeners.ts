@@ -13,8 +13,8 @@ export type ListenerTimings = {
   }[];
   lastAction: number;
   totalListeningTime: number;
-}
+};
 
 export type ListenersDetails = {
   webappUuid?: string;
-}
+};

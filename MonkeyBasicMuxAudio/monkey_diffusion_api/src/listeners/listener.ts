@@ -1,4 +1,8 @@
-import { ListenersDetails, ListenerState, ListenerTimings } from "./types/Listeners"
+import {
+  ListenersDetails,
+  ListenerState,
+  ListenerTimings,
+} from './types/Listeners';
 
 export class Listener {
   private timings: ListenerTimings = {
@@ -11,9 +15,15 @@ export class Listener {
   private state: ListenerState = ListenerState.INITIALIZING;
 
   constructor(
+    private readonly id: string,
+    public readonly radioId: string,
     private userAgent: string,
-    private listenersDetails?: ListenersDetails
+    private listenersDetails?: ListenersDetails,
   ) {}
+
+  public getId(): string {
+    return this.id;
+  }
 
   public getTimings(): ListenerTimings {
     return this.timings;
@@ -21,13 +31,12 @@ export class Listener {
 
   private updateTotalListeningTime(): void {
     const breaksTime = this.timings.breaks.reduce((acc, { start, end }) => {
-      if (end)
-        acc += end - start;
-      else
-        acc += Date.now() - start;
+      if (end) acc += end - start;
+      else acc += Date.now() - start;
       return acc;
     }, 0);
-    this.timings.totalListeningTime = Date.now() - this.timings.start - breaksTime;
+    this.timings.totalListeningTime =
+      Date.now() - this.timings.start - breaksTime;
   }
 
   public updateTimings(): void {
@@ -60,19 +69,24 @@ export class Listener {
   }
 
   public endBreak(): void {
-    if (this.timings.breaks.length === 0)
-      return;
+    if (this.timings.breaks.length === 0) return;
     const lastBreak = this.timings.breaks[this.timings.breaks.length - 1];
     lastBreak.end = Date.now();
   }
 
   public setState(state: ListenerState): void {
     if (state === ListenerState.PLAYING) {
-      if (this.state === ListenerState.ENDED || this.state === ListenerState.IDLE)
+      if (
+        this.state === ListenerState.ENDED ||
+        this.state === ListenerState.IDLE
+      )
         this.endBreak();
       this.updateTimings();
     } else if (state === ListenerState.IDLE || state === ListenerState.ENDED) {
-      if (this.state === ListenerState.PLAYING || this.state === ListenerState.INITIALIZING)
+      if (
+        this.state === ListenerState.PLAYING ||
+        this.state === ListenerState.INITIALIZING
+      )
         this.startBreak();
       this.updateTimings();
     } else if (state === ListenerState.INITIALIZING) {

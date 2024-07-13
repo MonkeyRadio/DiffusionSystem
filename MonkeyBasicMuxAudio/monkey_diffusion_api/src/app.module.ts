@@ -5,15 +5,17 @@ import { ListenersModule } from './listeners/listeners.module';
 import { HlsDiffModule } from './hls-diff/hls-diff.module';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { StatsModule } from './stats/stats.module';
 
 @Module({
   imports: [
-    ListenersModule,
-    HlsDiffModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
     ScheduleModule.forRoot(),
+    ListenersModule,
+    HlsDiffModule,
+    StatsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

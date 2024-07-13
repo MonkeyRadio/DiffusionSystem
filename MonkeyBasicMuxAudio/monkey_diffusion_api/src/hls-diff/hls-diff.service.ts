@@ -6,7 +6,7 @@ import { ListenersDetails, ListenerState } from 'src/listeners/types/Listeners';
 
 @Injectable()
 export class HlsDiffService {
-  constructor (
+  constructor(
     private readonly configService: ConfigService,
     private readonly listenersService: ListenersService,
   ) {}
@@ -23,21 +23,34 @@ export class HlsDiffService {
   }
 
   public async getManifest(
+    radioId: string,
     manifestId: string,
     userAgent: string,
     opts?: {
       listenerDetails?: ListenersDetails;
-    }
+    },
   ): Promise<string> {
-    const sharedPath = this.configService.get<string>('DIFFUSION_API_STREAMS_SHARED_PATH');
-    const manifestFile = await readFile(`${sharedPath}/${manifestId}/${manifestId}.m3u8`, 'utf8');
-    const {id: listenerId, listener: listener} = this.listenersService.addListener(userAgent, opts?.listenerDetails);
+    const sharedPath = this.configService.get<string>(
+      'DIFFUSION_API_STREAMS_SHARED_PATH',
+    );
+    const manifestFile = await readFile(
+      `${sharedPath}/${manifestId}/${manifestId}.m3u8`,
+      'utf8',
+    );
+    const { id: listenerId, listener: listener } =
+      this.listenersService.addListener(
+        radioId,
+        userAgent,
+        opts?.listenerDetails,
+      );
     listener.setManifestId(manifestId);
     return this.rewriteManifest(manifestFile, listenerId);
   }
 
   public getContentPath(listenerId: string, contentId: string): string {
-    const sharedPath = this.configService.get<string>('DIFFUSION_API_STREAMS_SHARED_PATH');
+    const sharedPath = this.configService.get<string>(
+      'DIFFUSION_API_STREAMS_SHARED_PATH',
+    );
     const listener = this.listenersService.getListener(listenerId);
     listener.setState(ListenerState.PLAYING);
     return `${sharedPath}/${listener.getManifestId()}/${contentId}`;

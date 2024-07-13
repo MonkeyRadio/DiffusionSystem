@@ -34,13 +34,11 @@ radio = normalize(gain_max = 20.0, gain_min = -11.0, target = -10., threshold = 
 radio = ladspa.fastlookaheadlimiter(limit=-5.0, release_time=0.08, radio)
 
 # Metadata
-
 radio = insert_metadata(radio)
 radio.on_metadata(fun (m) -> meta := m)
 metadata_http_handler(radio)
 
 # Outputs
-
 hls_output(radio, "monkeyradio")
 
 ice_output(radio)

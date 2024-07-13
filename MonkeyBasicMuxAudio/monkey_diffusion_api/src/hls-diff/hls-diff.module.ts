@@ -6,8 +6,6 @@ import { ListenersModule } from 'src/listeners/listeners.module';
 @Module({
   controllers: [HlsDiffController],
   providers: [HlsDiffService],
-  imports: [
-    ListenersModule,
-  ]
+  imports: [ListenersModule],
 })
 export class HlsDiffModule {}

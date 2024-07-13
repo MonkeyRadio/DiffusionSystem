@@ -6,7 +6,11 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    allowedHeaders: 'Content-Type, Accept',
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true,
+    exposedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 200,
+    preflightContinue: false,
   });
   app.getHttpAdapter().getInstance().disable('x-powered-by');
   await app.listen(3000);
