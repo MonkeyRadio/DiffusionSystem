@@ -24,6 +24,7 @@ def blank_rescue(stream, playlist_path)
     [
       blank.strip(
         max_blank=15.,
+        min_noise=3.,
         threshold=-60.,
         stream
       ),

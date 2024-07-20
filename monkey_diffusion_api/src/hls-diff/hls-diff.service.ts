@@ -34,7 +34,7 @@ export class HlsDiffService {
       'DIFFUSION_API_STREAMS_SHARED_PATH',
     );
     const manifestFile = await readFile(
-      `${sharedPath}/${manifestId}/${manifestId}.m3u8`,
+      `${sharedPath}/${radioId}/${manifestId}.m3u8`,
       'utf8',
     );
     const { id: listenerId, listener: listener } =
@@ -53,7 +53,7 @@ export class HlsDiffService {
     );
     const listener = this.listenersService.getListener(listenerId);
     listener.setState(ListenerState.PLAYING);
-    return `${sharedPath}/${listener.getManifestId()}/${contentId}`;
+    return `${sharedPath}/${listener.radioId}/${contentId}`;
   }
 
   public endListener(listenerId: string): void {

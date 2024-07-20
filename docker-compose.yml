@@ -1,17 +1,4 @@
 services:
-  liquidsoap:
-    build:
-      context: ./liquidsoap
-    container_name: liquidsoap
-    restart: always
-    volumes:
-      - ./liquidsoap/confs:/etc/liquidsoap
-      - ./shared:/shared
-      - ./liquidsoap/persist_output:/persist_output
-    networks:
-      - default
-    command: "liquidsoap /etc/liquidsoap/basic.liq"
-
   diffusion_api:
     build:
       context: ./monkey_diffusion_api
@@ -26,11 +13,13 @@ services:
       - default
 
   icecast:
-    image: "pltnk/icecast2"
+    image: "rolla/icecast-kh"
     container_name: icecast2
     restart: always
+    ports:
+      - "$ICECAST_PORT:8000"
     volumes:
-      - ./icecast/icecast.xml:/etc/icecast2/icecast.xml
+      - ./icecast/icecast.xml:/home/icecast/config/icecast.xml
     networks:
       - default
 
@@ -47,3 +36,4 @@ services:
 
 networks:
   default:
+    name: monkeyradio_diffusion_network

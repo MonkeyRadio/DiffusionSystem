@@ -2,30 +2,33 @@
 %include "icecast_creds.liq"
 %include "blank_rescue.liq"
 %include "metadata.liq"
+%include "inputs.liq"
 
 log.level := 2
 init.allow_root := true
+settings.harbor.bind_addrs := ["0.0.0.0"]
 
 # Sources
-natio = input.http(ice_output_url ^ "/natio")
 
-stud0 = input.http(ice_output_url ^ "/stud0")
+stud0 = input.harbor("stud0", port=8080, auth=input_auth)
 
-stud1 = input.http(ice_output_url ^ "/stud1")
+stud1 = input.harbor("stud1", port=8080, auth=input_auth)
 
-stud2 = input.http(ice_output_url ^ "/stud2")
+stud2 = input.harbor("stud2", port=8080, auth=input_auth)
 
-stud3 = input.http(ice_output_url ^ "/stud3")
+stud3 = input.harbor("stud3", port=8080, auth=input_auth)
 
-stud4 = input.http(ice_output_url ^ "/stud4")
+stud4 = input.harbor("stud4", port=8080, auth=input_auth)
 
-radioMixed = add([natio, stud0, stud1, stud2, stud3, stud4])
+studPool = add([stud0, stud1, stud2, stud3, stud4])
 
-radioMixed = mksafe(radioMixed)
+studPool = mksafe(studPool)
 
-#Blank detection and rescue disk
+studio = buffer(fallible=true, studPool)
 
-radio = mksafe(blank_rescue(radioMixed, "/shared/rescue/rescue.txt"))
+radio = blank_rescue(studio, "/shared/rescue/rescue.txt")
+
+radio = mksafe(radio)
 
 # Sound Processing MIXER
 
@@ -39,6 +42,6 @@ radio.on_metadata(fun (m) -> meta := m)
 metadata_http_handler(radio)
 
 # Outputs
-hls_output(radio, "monkeyradio")
+hls_output(radio, radio_id, program_name)
 
-ice_output(radio)
+ice_output(radio, radio_id, program_name)

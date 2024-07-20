@@ -3,7 +3,7 @@
 file.mkdir("/shared/stream_output")
 file.mkdir("/shared/stream_output/tmp")
 
-def hls_output(stream, stream_name)  
+def hls_output(stream, radio_id, stream_name)  
 
   aac_lo = %ffmpeg(format="mpegts",
                     %audio(
@@ -37,7 +37,7 @@ def hls_output(stream, stream_name)
   def segment_name(~position,~extname,stream_name) =
     timestamp = int_of_float(time())
     duration = 4
-    "#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
+    "#{radio_id}-#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
   end
 
   output.file.hls(playlist="#{stream_name}.m3u8",
@@ -46,25 +46,25 @@ def hls_output(stream, stream_name)
                   segments=900,
                   segments_overhead=5,
                   segment_name=segment_name,
-                  persist_at="/persist_output/#{stream_name}/state.config",
-                  "/shared/stream_output/#{stream_name}",
+                  persist_at="/persist_output/#{radio_id}-#{stream_name}/state.config",
+                  "/shared/stream_output/#{radio_id}",
                   streams_nfo,
                   stream)
 end
 
 
-def ice_output(stream)
+def ice_output(stream, radio_id, stream_name)
   output.icecast(%fdkaac(channels=2, samplerate=44100, bandwidth="auto", bitrate=64, aot="mpeg4_he_aac_v2", afterburner=false, transmux="adts", sbr_mode=false),    
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "monkey-aac-mid",
+    mount = "#{radio_id}-#{stream_name}-aac-mid",
     stream)
 
   output.icecast(%fdkaac(channels=2, samplerate=48000, bandwidth="auto", bitrate=320, aot="mpeg4_aac_lc", afterburner=false, transmux="adts", sbr_mode=false),    
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "monkey-aac-high",
+    mount = "#{radio_id}-#{stream_name}-aac-high",
     stream)
 end
