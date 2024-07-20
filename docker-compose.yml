@@ -16,8 +16,6 @@ services:
     image: "rolla/icecast-kh"
     container_name: icecast2
     restart: always
-    ports:
-      - "$ICECAST_PORT:8000"
     volumes:
       - ./icecast/icecast.xml:/home/icecast/config/icecast.xml
     networks:
