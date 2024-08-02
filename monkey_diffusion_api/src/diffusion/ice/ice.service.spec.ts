@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { HlsDiffService } from './hls-diff.service';
+import { IceService } from './ice.service';
 
-describe('HlsDiffService', () => {
-  let service: HlsDiffService;
+describe('IceService', () => {
+  let service: IceService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [HlsDiffService],
+      providers: [IceService],
     }).compile();
 
-    service = module.get<HlsDiffService>(HlsDiffService);
+    service = module.get<IceService>(IceService);
   });
 
   it('should be defined', () => {

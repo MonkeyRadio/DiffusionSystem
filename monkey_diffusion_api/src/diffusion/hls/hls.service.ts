@@ -5,7 +5,7 @@ import { ListenersService } from 'src/listeners/listeners.service';
 import { ListenersDetails, ListenerState } from 'src/listeners/types/Listeners';
 
 @Injectable()
-export class HlsDiffService {
+export class HlsService {
   constructor(
     private readonly configService: ConfigService,
     private readonly listenersService: ListenersService,
@@ -34,7 +34,7 @@ export class HlsDiffService {
       'DIFFUSION_API_STREAMS_SHARED_PATH',
     );
     const manifestFile = await readFile(
-      `${sharedPath}/${radioId}/${manifestId}.m3u8`,
+      `${sharedPath}/${radioId}/${manifestId}/${manifestId}.m3u8`,
       'utf8',
     );
     const { id: listenerId, listener: listener } =
@@ -53,7 +53,7 @@ export class HlsDiffService {
     );
     const listener = this.listenersService.getListener(listenerId);
     listener.setState(ListenerState.PLAYING);
-    return `${sharedPath}/${listener.radioId}/${contentId}`;
+    return `${sharedPath}/${listener.radioId}/${listener.getManifestId()}/${contentId}`;
   }
 
   public endListener(listenerId: string): void {

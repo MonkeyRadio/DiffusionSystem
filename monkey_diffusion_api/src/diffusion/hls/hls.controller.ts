@@ -7,12 +7,12 @@ import {
   Request,
   Res,
 } from '@nestjs/common';
-import { HlsDiffService } from './hls-diff.service';
+import { HlsService } from './hls.service';
 import { Response } from 'express';
 
-@Controller('hls-diff')
-export class HlsDiffController {
-  constructor(private readonly hlsDiffService: HlsDiffService) {}
+@Controller('diffusion/hls')
+export class HlsController {
+  constructor(private readonly hlsService: HlsService) {}
 
   @Get(':radioId/content/:listenerId/:contentId')
   getContentPath(
@@ -21,7 +21,7 @@ export class HlsDiffController {
     @Res() res: Response,
   ): void {
     try {
-      const path = this.hlsDiffService.getContentPath(listenerId, contentId);
+      const path = this.hlsService.getContentPath(listenerId, contentId);
       res.sendFile(path);
     } catch (e) {
       throw new NotFoundException();
@@ -34,10 +34,11 @@ export class HlsDiffController {
     @Param('manifestId') manifestId: string,
     @Query('webapp-uuid') webappUuid: string,
     @Request() req: Request,
-  ): Promise<string> {
+    @Res() res: Response,
+  ) {
     try {
       manifestId = manifestId.replace(/\..*/, '');
-      return await this.hlsDiffService.getManifest(
+      const manifest = await this.hlsService.getManifest(
         radioId,
         manifestId,
         req.headers['user-agent'],
@@ -47,6 +48,7 @@ export class HlsDiffController {
           },
         },
       );
+      res.contentType('application/vnd.apple.mpegurl').send(manifest);
     } catch (e) {
       throw new NotFoundException();
     }
@@ -55,7 +57,7 @@ export class HlsDiffController {
   @Get(':radioId/end/:listenerId')
   endListener(@Param('listenerId') listenerId: string): void {
     try {
-      this.hlsDiffService.endListener(listenerId);
+      this.hlsService.endListener(listenerId);
     } catch (e) {
       throw new NotFoundException();
     }

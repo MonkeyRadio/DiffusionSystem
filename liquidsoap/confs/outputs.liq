@@ -34,10 +34,10 @@ def hls_output(stream, radio_id, stream_name)
             ("aac_mid", aac_mid),
             ("aac_hi", aac_hi)]
 
-  def segment_name(~position,~extname,stream_name) =
+  def segment_name(~position,~extname,stream_variant_name) =
     timestamp = int_of_float(time())
     duration = 4
-    "#{radio_id}-#{stream_name}_#{duration}_#{timestamp}_#{position}.#{extname}"
+    "seg_#{timestamp}_#{position}.#{extname}"
   end
 
   output.file.hls(playlist="#{stream_name}.m3u8",
@@ -47,24 +47,23 @@ def hls_output(stream, radio_id, stream_name)
                   segments_overhead=5,
                   segment_name=segment_name,
                   persist_at="/persist_output/#{radio_id}-#{stream_name}/state.config",
-                  "/shared/stream_output/#{radio_id}",
+                  "/shared/stream_output/#{radio_id}/#{stream_name}",
                   streams_nfo,
                   stream)
 end
-
 
 def ice_output(stream, radio_id, stream_name)
   output.icecast(%fdkaac(channels=2, samplerate=44100, bandwidth="auto", bitrate=64, aot="mpeg4_he_aac_v2", afterburner=false, transmux="adts", sbr_mode=false),    
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "#{radio_id}-#{stream_name}-aac-mid",
+    mount = "stream/#{radio_id}-#{stream_name}-aac-mid",
     stream)
 
   output.icecast(%fdkaac(channels=2, samplerate=48000, bandwidth="auto", bitrate=320, aot="mpeg4_aac_lc", afterburner=false, transmux="adts", sbr_mode=false),    
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "#{radio_id}-#{stream_name}-aac-high",
+    mount = "stream/#{radio_id}-#{stream_name}-aac-high",
     stream)
 end
