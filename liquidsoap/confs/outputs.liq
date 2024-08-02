@@ -57,13 +57,13 @@ def ice_output(stream, radio_id, stream_name)
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "stream/#{radio_id}-#{stream_name}-aac-mid",
+    mount = "stream/#{radio_id}_#{stream_name}-aac-mid",
     stream)
 
   output.icecast(%fdkaac(channels=2, samplerate=48000, bandwidth="auto", bitrate=320, aot="mpeg4_aac_lc", afterburner=false, transmux="adts", sbr_mode=false),    
     host = ice_output_host,
     port = ice_output_port,
     password = ice_output_source_pwd,
-    mount = "stream/#{radio_id}-#{stream_name}-aac-high",
+    mount = "stream/#{radio_id}_#{stream_name}-aac-hi",
     stream)
 end
