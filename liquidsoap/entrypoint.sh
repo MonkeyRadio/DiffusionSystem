@@ -10,6 +10,7 @@
 # ICE_OUTPUT_HOST
 # ICE_OUTPUT_PORT
 # ICE_OUTPUT_SOURCE_PASSWORD
+# DOMAIN
 
 # Check if all the required env variables are set
 if [ -z "$LIQUIDSOAP_RADIO_ID" ]; then
@@ -42,13 +43,21 @@ if [ -z "$ICE_OUTPUT_SOURCE_PASSWORD" ]; then
   exit 1
 fi
 
+if [ -z "$DOMAIN" ]; then
+  echo "DOMAIN is missing"
+  exit 1
+fi
+
 # Create liq variables file
 echo "
 radio_id = \"$LIQUIDSOAP_RADIO_ID\"
 program_name = \"$LIQUIDSOAP_PROGRAM_NAME\"
 ice_output_source_pwd = \"$ICE_OUTPUT_SOURCE_PASSWORD\"
 ice_output_port = $ICE_OUTPUT_PORT
-ice_output_host = \"$ICE_OUTPUT_HOST\"" > /etc/liquidsoap/icecast_creds.liq
+ice_output_host = \"$ICE_OUTPUT_HOST\"
+domain = \"$DOMAIN\"" > /etc/liquidsoap/icecast_creds.liq
+
+cat /etc/liquidsoap/icecast_creds.liq
 
 chown liquidsoap:liquidsoap /etc/liquidsoap/icecast_creds.liq
 

@@ -2,3 +2,6 @@
 .env
 cc.log
 *.mp3
+*.pem
+*.crt
+*.csr

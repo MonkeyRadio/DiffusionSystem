@@ -4,7 +4,7 @@
 
 # Commands :
 # - start : Start the liquidsoap docker instance
-#  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <harbor_stream_port>
+#  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <root_domain_name>
 # - stop : Stop the liquidsoap docker instance
 #  - Usage : ./liquidsoap-service.sh stop <radio_id>
 # - restart : Restart the liquidsoap docker instance
@@ -14,10 +14,27 @@ function build {
   docker build -t liquidsoap-custom-image:latest liquidsoap -f liquidsoap/Dockerfile
 }
 
+function generate_cert {
+  CRT_LENGTH=2048
+  CRT_VALIDITY=36500
+  RADID=$1
+  PRGNAME=$2
+  DOMAIN=$3
+  SSLSUBJECT="/C=FR/ST=IDF/L=Paris/O=MonkeyRadio/OU=IT/CN=*.$DOMAIN"
+  mkdir -p ./shared/certs/$DOMAIN
+  echo "Generating root certificate for $DOMAIN"
+  openssl genrsa -out ./shared/certs/$DOMAIN/ca_key.pem $CRT_LENGTH
+  openssl req -new -x509 -key ./shared/certs/$DOMAIN/ca_key.pem -out ./shared/certs/$DOMAIN/ca.crt -days $CRT_LENGTH -subj "$SSLSUBJECT"
+  echo "Generating certificate for *.$DOMAIN"
+  openssl req -new -key ./shared/certs/$DOMAIN/ca_key.pem -out ./shared/certs/$DOMAIN/cert.csr -subj "$SSLSUBJECT"
+  openssl x509 -req -in ./shared/certs/$DOMAIN/cert.csr -out ./shared/certs/$DOMAIN/cert.pem -CA ./shared/certs/$DOMAIN/ca.crt -CAkey ./shared/certs/$DOMAIN/ca_key.pem -days $CRT_VALIDITY
+  chmod 755 ./shared/certs/$DOMAIN/*
+}
+
 function usage {
   echo "Commands :"
   echo " - start : Start the liquidsoap docker instance"
-  echo "  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <harbor_stream_port>"
+  echo "  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <root_domain_name>"
   echo " - stop : Stop the liquidsoap docker instance"
   echo "  - Usage : ./liquidsoap-service.sh stop <radio_id> <program_name>"
   echo " - restart : Restart the liquidsoap docker instance"
@@ -81,14 +98,32 @@ if [ "$1" = "start" ]; then
     exit 1
   fi
 
+  # Check if the domain root name is set
   if [ -z "$9" ]; then
-    echo "Harbor Stream Port is missing"
+    echo "Root domain name is missing"
     exit 1
   fi
 
   # Start the liquidsoap docker instance
+  generate_cert $2 $3 $9
   build
-  docker run -d --restart always --network monkeyradio_diffusion_network --name liquidsoap-$2-$3 -p $9:8080 -v $8:/shared -v ./liquidsoap/persist_output:/persist_output -e LIQUIDSOAP_RADIO_ID=$2 -e LIQUIDSOAP_PROGRAM_NAME=$3 -e LIQUIDSOAP_API_LOGIN_URL=$7 -e ICE_OUTPUT_HOST=$4 -e ICE_OUTPUT_PORT=$5 -e ICE_OUTPUT_SOURCE_PASSWORD=$6 liquidsoap-custom-image:latest
+  docker run -d \
+    --restart always \
+    --network monkeyradio_diffusion_network \
+    --name liquidsoap-$2-$3 \
+    --label "traefik.enable=true" \
+    --label "traefik.tcp.routers.liquidsoap-$2-$3.rule=HostSNI(\`liquidsoap-$2-$3.$9\`)" \
+    --label "traefik.tcp.routers.liquidsoap-$2-$3.tls=true" \
+    --label "traefik.tcp.routers.liquidsoap-$2-$3.entrypoints=websecure" \
+    --label "traefik.tcp.services.liquidsoap-$2-$3.loadbalancer.server.port=8080" \
+    --label "traefik.tcp.routers.liquidsoap-$2-$3.tls.passthrough=true" \
+    --label "traefik.http.routers.liquidsoap-$2-$3.rule=Path(\`/v1/ca/liquidsoap-$2-$3/ca.crt\`)" \
+    --label "traefik.http.services.liquidsoap-$2-$3.loadbalancer.server.port=8081" \
+    --label "traefik.http.middlewares.lq-$2-$3-stripprefix.stripprefix.prefixes=/v1/ca/liquidsoap-$2-$3/" \
+    --label "traefik.http.routers.liquidsoap-$2-$3.middlewares=lq-$2-$3-stripprefix" \
+    -v $8:/shared -v ./liquidsoap/persist_output:/persist_output \
+    -e LIQUIDSOAP_RADIO_ID=$2 -e LIQUIDSOAP_PROGRAM_NAME=$3 -e LIQUIDSOAP_API_LOGIN_URL=$7 -e ICE_OUTPUT_HOST=$4 -e ICE_OUTPUT_PORT=$5 -e ICE_OUTPUT_SOURCE_PASSWORD=$6 -e DOMAIN=$9 \
+    liquidsoap-custom-image:latest
 fi
 
 # Stop command

@@ -8,17 +8,24 @@ log.level := 2
 init.allow_root := true
 settings.harbor.bind_addrs := ["0.0.0.0"]
 
+transport = http.transport.ssl(
+  certificate = "/shared/certs/#{domain}/cert.pem",
+  key = "/shared/certs/#{domain}/ca_key.pem",
+)
+
+harbor.http.static(port=8081, path="/", "/shared/certs/#{domain}/")
+
 # Sources
 
-stud0 = input.harbor("stud0", port=8080, auth=input_auth)
+stud0 = input.harbor("stud0", port=8080, auth=input_auth, transport=transport)
 
-stud1 = input.harbor("stud1", port=8080, auth=input_auth)
+stud1 = input.harbor("stud1", port=8080, auth=input_auth, transport=transport)
 
-stud2 = input.harbor("stud2", port=8080, auth=input_auth)
+stud2 = input.harbor("stud2", port=8080, auth=input_auth, transport=transport)
 
-stud3 = input.harbor("stud3", port=8080, auth=input_auth)
+stud3 = input.harbor("stud3", port=8080, auth=input_auth, transport=transport)
 
-stud4 = input.harbor("stud4", port=8080, auth=input_auth)
+stud4 = input.harbor("stud4", port=8080, auth=input_auth, transport=transport)
 
 studPool = add([stud0, stud1, stud2, stud3, stud4])
 
