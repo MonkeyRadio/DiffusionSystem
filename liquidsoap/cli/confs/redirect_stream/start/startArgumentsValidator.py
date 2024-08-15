@@ -60,6 +60,12 @@ class StartArgumentsValidator(ArgumentsValidator):
       default=44100,
       choices=[44100, 48000],
     )
+    parser.add_argument(
+      '--additional_docker_args',
+      type=str,
+      help='Additional docker arguments',
+      default='',
+    )
     self.parser = parser
 
   def validate(self) -> ArgumentParser:

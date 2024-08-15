@@ -20,7 +20,7 @@ class Start(Method):
     args = StartArguments(self.validator.validate())
     print(f'Starting redirecting from {args.input_url} to {args.output_transport_proto}://{args.output_host}:{args.output_port}{args.output_mount} with options: {args}')
     environments = args.to_env_dict()
-    self.dockerService.run.run('liquidsoap-redirect-stream', f'', [], environments, [], 'liquidsoap-redirect-stream')
+    self.dockerService.run.run('liquidsoap-redirect-stream', f'', [], environments, [], 'liquidsoap-redirect-stream', args.additional_docker_args)
 
   def validate(self, arguments: ArgumentParser) -> None:
     self.validator = StartArgumentsValidator()

@@ -16,13 +16,22 @@ class Port:
     container: str
 
 class DockerRun:
-  def run(self, image: str, command: str, volumes: list[Volume], environment: list[Environment], ports: list[Port], name: str):
+  def run(
+          self,
+          image: str,
+          command: str,
+          volumes: list[Volume],
+          environment: list[Environment],
+          ports: list[Port],
+          name: str,
+          additonal_args: str = ''
+          ):
       args = {
         'volumes': ' '.join([f"-v {volume.host}:{volume.container}" for volume in volumes]),
         'environment': ' '.join([f"-e {env.name}={env.value}" for env in environment]),
         'ports': ' '.join([f"-p {port.host}:{port.container}" for port in ports]),
       }
-      os.system(f"docker run -d {args['volumes']} {args['environment']} {args['ports']} --name {name} {image} {command}")
+      os.system(f"docker run -d {args['volumes']} {args['environment']} {args['ports']} --name {name} {additonal_args} {image} {command}")
 
   def stop(self, containerId):
       container = self.dockerClient.containers.get(containerId)

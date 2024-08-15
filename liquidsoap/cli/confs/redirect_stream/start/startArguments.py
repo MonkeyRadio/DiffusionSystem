@@ -40,6 +40,10 @@ class StartArguments:
   @property
   def output_sr(self) -> int:
     return self.parser.output_sr
+
+  @property
+  def additional_docker_args(self) -> str:
+    return self.parser.additional_docker_args
   
   def to_env_dict(self) -> list[Environment]:
     return [
