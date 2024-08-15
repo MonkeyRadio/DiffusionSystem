@@ -10,7 +10,7 @@ end
 
 transport = http.transport.ssl(
   certificate = "/shared/certs/#{domain}/cert.pem",
-  key = "/shared/certs/#{domain}/ca_key.pem",
+  key = "/shared/certs/#{domain}/cert_key.pem",
 )
 
 def input_harbor(name) =

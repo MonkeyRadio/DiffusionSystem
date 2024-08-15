@@ -6,3 +6,4 @@ cc.log
 *.crt
 *.csr
 __pycache__
+ca.ext

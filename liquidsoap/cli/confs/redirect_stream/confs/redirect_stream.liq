@@ -3,6 +3,7 @@
 log.level := 2
 init.allow_root := true
 
+
 in = input.http(input_url)
 
 safe_out = mksafe(in)

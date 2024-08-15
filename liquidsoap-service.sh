@@ -24,10 +24,17 @@ function generate_cert {
   mkdir -p ./shared/certs/$DOMAIN
   echo "Generating root certificate for $DOMAIN"
   openssl genrsa -out ./shared/certs/$DOMAIN/ca_key.pem $CRT_LENGTH
-  openssl req -new -x509 -key ./shared/certs/$DOMAIN/ca_key.pem -out ./shared/certs/$DOMAIN/ca.crt -days $CRT_LENGTH -subj "$SSLSUBJECT"
+  openssl req -x509 -new -nodes -key ./shared/certs/$DOMAIN/ca_key.pem -sha256 -days $CRT_VALIDITY -out ./shared/certs/$DOMAIN/ca.crt -subj '/CN=MonkeyRadio Root CA/C=AT/ST=Paris/L=Paris/O=MonkeyRadio'
   echo "Generating certificate for *.$DOMAIN"
-  openssl req -new -key ./shared/certs/$DOMAIN/ca_key.pem -out ./shared/certs/$DOMAIN/cert.csr -subj "$SSLSUBJECT"
-  openssl x509 -req -in ./shared/certs/$DOMAIN/cert.csr -out ./shared/certs/$DOMAIN/cert.pem -CA ./shared/certs/$DOMAIN/ca.crt -CAkey ./shared/certs/$DOMAIN/ca_key.pem -days $CRT_VALIDITY
+  openssl genrsa -out ./shared/certs/$DOMAIN/cert_key.pem $CRT_LENGTH
+  openssl req -new -key ./shared/certs/$DOMAIN/cert_key.pem -out ./shared/certs/$DOMAIN/cert.csr -subj "$SSLSUBJECT"
+  echo "authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName = @alt_names
+[alt_names]
+DNS.1 = *.$DOMAIN" > ./shared/certs/$DOMAIN/cert.ext
+  openssl x509 -req -in ./shared/certs/$DOMAIN/cert.csr -out ./shared/certs/$DOMAIN/cert.pem -CA ./shared/certs/$DOMAIN/ca.crt -CAkey ./shared/certs/$DOMAIN/ca_key.pem -days $CRT_VALIDITY -extfile ./shared/certs/$DOMAIN/cert.ext
   chmod 755 ./shared/certs/$DOMAIN/*
 }
 
