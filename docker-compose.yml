@@ -32,17 +32,6 @@ services:
       - "traefik.http.middlewares.ice-replace.replacepathregex.replacement=/stream/$$1"
       - "traefik.http.routers.icecast.middlewares=ice-replace"
 
-  # proxy:
-  #   image: "nginx"
-  #   container_name: proxy
-  #   restart: always
-  #   ports:
-  #     - "$NGINX_PORT:80"
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
-  #   networks:
-  #     - default
-
   reverse-proxy:
     image: traefik:v3.1
     ports:
