@@ -32,16 +32,17 @@ export class MetadataService {
     contentId: string,
     metadata: MetadataDto,
   ) {
+    const strRegex = /[^a-zA-Z0-9 ]/g;
     const metadataRequest: MetadataRequest = {
-      title: metadata.title,
-      artist: metadata.artist,
-      album: metadata.album,
+      title: metadata.title.replace(strRegex, ''),
+      artist: metadata.artist.replace(strRegex, ''),
+      album: metadata.album ? metadata.album.replace(strRegex, '') : '',
       year: metadata.year,
       trackNumber: metadata.trackNumber,
       duration: metadata.duration,
       tsPosted: metadata.tsPosted,
       comment: {
-        internalId: metadata.internalId,
+        internalId: metadata.internalId.replace(strRegex, ''),
         type: metadata.type,
         video: metadata.video,
         displayMetadata: metadata.displayMetadata,
