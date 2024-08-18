@@ -45,6 +45,7 @@ export class MetadataService {
         type: metadata.type,
         video: metadata.video,
         displayMetadata: metadata.displayMetadata,
+        tsUpdated: metadata.tsUpdated,
       },
     };
 

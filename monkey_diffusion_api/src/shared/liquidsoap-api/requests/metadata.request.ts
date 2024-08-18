@@ -5,8 +5,8 @@ export type MetadataRequest = {
   year?: number;
   duration: number;
   trackNumber?: number;
-  tsPosted?: number;
-  comment?: MetadataComment;
+  tsPosted: number;
+  comment: MetadataComment;
 };
 
 export enum MetadataType {
@@ -21,4 +21,5 @@ export type MetadataComment = {
   type: MetadataType;
   video: boolean;
   displayMetadata: boolean;
+  tsUpdated: number;
 };
