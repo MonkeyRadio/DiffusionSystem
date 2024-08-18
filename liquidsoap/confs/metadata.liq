@@ -6,7 +6,12 @@ def get_meta(_, response) =
   response.json(meta())
 end
 
-harbor.http.register(port=webserver_port, method="GET", "/meta", get_meta)
+harbor.http.register(
+  port=8084,
+  method="GET",
+  "/metadata",
+  get_meta,
+  )
 
 def metadata_http_handler(source)
   def set_meta(request, response) =
@@ -20,7 +25,12 @@ def metadata_http_handler(source)
         "No metadata to add!"
     end
   
-    response.html("<html><body><b>#{ret}</b></body></html>")
+    response.json(meta_param)
   end
-  harbor.http.register(port=webserver_port, method="PUT", "/meta", set_meta)
+  harbor.http.register(
+    port=8084,
+    method="POST",
+    "/metadata",
+    set_meta,
+    )
 end

@@ -23,8 +23,8 @@ if [ -z "$LIQUIDSOAP_PROGRAM_NAME" ]; then
   exit 1
 fi
 
-if [ -z "$LIQUIDSOAP_API_LOGIN_URL" ]; then
-  echo "LIQUIDSOAP_API_LOGIN_URL is missing"
+if [ -z "$MONKEYRADIO_API_URL" ]; then
+  echo "MONKEYRADIO_API_URL is missing"
   exit 1
 fi
 

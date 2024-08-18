@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import * as compression from 'compression';
 
 async function bootstrap() {
@@ -20,6 +20,11 @@ async function bootstrap() {
     defaultVersion: '1',
   });
   app.getHttpAdapter().getInstance().disable('x-powered-by');
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+    }),
+  );
   await app.listen(3000);
 }
 bootstrap();

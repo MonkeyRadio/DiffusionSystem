@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { UserModel } from '../models/user.model';
 
 @Injectable()
-export class AuthService {
+export class AuthRepository {
   private readonly resource = '/v4/auth';
 
   constructor(

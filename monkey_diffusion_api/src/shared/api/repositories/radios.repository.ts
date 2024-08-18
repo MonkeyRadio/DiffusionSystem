@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { RadioModel } from '../models/radio.model';
 
 @Injectable()
-export class RadiosService {
+export class RadiosRepository {
   private readonly resource = '/v4/radio';
 
   constructor(

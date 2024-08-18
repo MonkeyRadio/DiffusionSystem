@@ -1,8 +1,8 @@
 %include "outputs.liq"
 %include "icecast_creds.liq"
 %include "blank_rescue.liq"
-%include "metadata.liq"
 %include "inputs.liq"
+%include "metadata.liq"
 
 log.level := 2
 init.allow_root := true

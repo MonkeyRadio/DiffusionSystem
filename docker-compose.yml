@@ -16,6 +16,14 @@ services:
       - "traefik.http.routers.diffusion_api.rule=PathPrefix(`/`)"
       - "traefik.http.services.diffusion_api.loadbalancer.server.port=3000"
 
+  cache:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+    networks:
+      - default
+    command: redis-server --loglevel warning
+
   icecast:
     image: "rolla/icecast-kh"
     container_name: icecast2

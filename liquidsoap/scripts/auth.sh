@@ -5,15 +5,20 @@
 # Args : $1 = user $2 = password
 
 # Environment variables
-# LIQUIDSOAP_API_LOGIN_URL : URL to the API endpoint to authenticate the user
+# MONKEYRADIO_API_URL : URL to the API endpoint to authenticate the user
 # LIQUIDSOAP_RADIO_ID : ID of the radio (used with API LOGIN)
 
 # Check if the user is allowed to connect to the stream
 
 # If the LIQUIDSOAP_API_LOGIN_URL is set, we will use the API to authenticate the user
-if [ -n "$LIQUIDSOAP_API_LOGIN_URL" ]; then
-  # Call the API to authenticate the user
-  response=$(curl -s -X POST -d "nickname=$1&password=$2" $LIQUIDSOAP_API_LOGIN_URL)
+if [ -n "$MONKEYRADIO_API_URL" ]; then
+  # Use token if user = _token
+  if [ "$1" = "_token" ]; then
+    response=$(curl -s --header "Authorization: $2" "$MONKEYRADIO_API_URL/v4/auth/me")
+  else
+    # Call the API to authenticate the user
+    response=$(curl -s -X POST -d "nickname=$1&password=$2" "$MONKEYRADIO_API_URL/v4/auth/login")
+  fi
 
   # JSON parsing
   json=$(echo $response | jq '.')

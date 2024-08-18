@@ -1,22 +1,7 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { type FetchOptions, ofetch } from 'ofetch';
-import { AuthRepository } from './repositories/auth.repository';
-import { RadiosRepository } from './repositories/radios.repository';
+import { FetchOptions, ofetch } from 'ofetch';
 
-@Injectable()
-export class ApiService {
-  private readonly baseUrl: string;
-
-  constructor(
-    private readonly configService: ConfigService,
-    @Inject(forwardRef(() => AuthRepository))
-    public readonly auth: AuthRepository,
-    @Inject(forwardRef(() => RadiosRepository))
-    public readonly radio: RadiosRepository,
-  ) {
-    this.baseUrl = this.configService.get<string>('DIFFUSION_API_BASE_API_URL');
-  }
+export class LiquidsoapFetcher {
+  public constructor(private readonly baseUrl: string) {}
 
   public async get<T>(url: string, opts?: FetchOptions<'json'>) {
     return await ofetch<T>(`${this.baseUrl}${url}`, {

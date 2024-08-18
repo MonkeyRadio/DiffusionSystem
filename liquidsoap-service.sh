@@ -4,7 +4,7 @@
 
 # Commands :
 # - start : Start the liquidsoap docker instance
-#  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <root_domain_name>
+#  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <MONKEYRADIO_API_URL> <shared_volume_path> <root_domain_name>
 # - stop : Stop the liquidsoap docker instance
 #  - Usage : ./liquidsoap-service.sh stop <radio_id>
 # - restart : Restart the liquidsoap docker instance
@@ -41,7 +41,7 @@ DNS.1 = *.$DOMAIN" > ./shared/certs/$DOMAIN/cert.ext
 function usage {
   echo "Commands :"
   echo " - start : Start the liquidsoap docker instance"
-  echo "  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <LIQUIDSOAP_API_LOGIN_URL> <shared_volume_path> <root_domain_name>"
+  echo "  - Usage : ./liquidsoap-service.sh start <radio_id> <program_name> <ice_output_host> <ice_output_port> <ice_output_source_pwd> <MONKEYRADIO_API_URL> <shared_volume_path> <root_domain_name>"
   echo " - stop : Stop the liquidsoap docker instance"
   echo "  - Usage : ./liquidsoap-service.sh stop <radio_id> <program_name>"
   echo " - restart : Restart the liquidsoap docker instance"
@@ -93,7 +93,7 @@ if [ "$1" = "start" ]; then
     exit 1
   fi
 
-  # Check if the LIQUIDSOAP_API_LOGIN_URL is set
+  # Check if the MONKEYRADIO_API_URL is set
   if [ -z "$7" ]; then
     echo "LIQUIDSOAP API Login URL is missing"
     exit 1
@@ -129,7 +129,7 @@ if [ "$1" = "start" ]; then
     --label "traefik.http.middlewares.lq-$2-$3-stripprefix.stripprefix.prefixes=/v1/ca/liquidsoap-$2-$3/" \
     --label "traefik.http.routers.liquidsoap-$2-$3.middlewares=lq-$2-$3-stripprefix" \
     -v $8:/shared -v ./liquidsoap/persist_output:/persist_output \
-    -e LIQUIDSOAP_RADIO_ID=$2 -e LIQUIDSOAP_PROGRAM_NAME=$3 -e LIQUIDSOAP_API_LOGIN_URL=$7 -e ICE_OUTPUT_HOST=$4 -e ICE_OUTPUT_PORT=$5 -e ICE_OUTPUT_SOURCE_PASSWORD=$6 -e DOMAIN=$9 \
+    -e LIQUIDSOAP_RADIO_ID=$2 -e LIQUIDSOAP_PROGRAM_NAME=$3 -e MONKEYRADIO_API_URL=$7 -e ICE_OUTPUT_HOST=$4 -e ICE_OUTPUT_PORT=$5 -e ICE_OUTPUT_SOURCE_PASSWORD=$6 -e DOMAIN=$9 \
     liquidsoap-custom-image:latest
 fi
 

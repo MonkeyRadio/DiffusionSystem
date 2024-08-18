@@ -15,6 +15,7 @@ import { ApiAccreditGuard } from '@/api-accredit/api-accredit.guard';
 import { StatsListenersResponse } from './responses/stats-listeners.response';
 import { Radios } from '@/api-accredit/decorators/radios.decorator';
 import { RadioModel } from '@/shared/api/models/radio.model';
+import { RequiredPipe } from '@/shared/pipes/required.pipe';
 
 @Controller('stats')
 export class StatsController {
@@ -26,16 +27,13 @@ export class StatsController {
   public listeners(
     @Radios() userRadios: RadioModel[],
     @Param('radioId') radioId: string,
-    @Query('manifestId') manifestId: string,
+    @Query('manifestId', RequiredPipe) manifestId: string,
     @Query('onlyLive', new DefaultValuePipe(false), ParseBoolPipe)
     onlyLive: boolean,
   ): StatsListenersResponse {
     const radio = userRadios.find((radio) => radio.id === radioId);
     if (!radio) throw new NotFoundException('Radio not found');
-    if (
-      manifestId &&
-      radio.liveStream.find((liveStream) => liveStream.name === manifestId)
-    )
+    if (radio.liveStream.find((liveStream) => liveStream.name === manifestId))
       return this.statsService.listeners(radio.id, [manifestId]);
     return this.statsService.listeners(
       radio.id,

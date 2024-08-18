@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { AuthService } from './repositories/auth.service';
+import { AuthRepository } from './repositories/auth.repository';
 import { ApiService } from './api.service';
-import { RadiosService } from './repositories/radios.service';
+import { RadiosRepository } from './repositories/radios.repository';
 
 @Module({
-  providers: [ApiService, AuthService, RadiosService],
+  providers: [ApiService, AuthRepository, RadiosRepository],
   exports: [ApiService],
 })
 export class ApiModule {}
