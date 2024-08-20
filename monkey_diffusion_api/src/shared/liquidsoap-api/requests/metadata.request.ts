@@ -22,4 +22,5 @@ export type MetadataComment = {
   video: boolean;
   displayMetadata: boolean;
   tsUpdated: number;
+  duration: number;
 };
