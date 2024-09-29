@@ -42,7 +42,7 @@ export class MetadataService {
       year: metadata.year,
       trackNumber: metadata.trackNumber,
       duration: metadata.duration,
-      imageUrl: `${this.configService.get<string>('CDN_URL')}/radio-${radioId}/${metadata.internalId.replace(strRegex, '')}`,
+      imageUrl: `artworkURL_800\0${this.configService.get<string>('CDN_URL')}/radio-${radioId}/${metadata.internalId.replace(strRegex, '')}`,
       tsPosted: metadata.tsPosted,
       comment: {
         internalId: metadata.internalId.replace(strRegex, ''),
