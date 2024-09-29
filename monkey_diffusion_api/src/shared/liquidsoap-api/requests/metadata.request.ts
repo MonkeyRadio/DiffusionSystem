@@ -4,6 +4,7 @@ export type MetadataRequest = {
   album?: string;
   year?: number;
   duration: number;
+  imageUrl: string;
   trackNumber?: number;
   tsPosted: number;
   comment: MetadataComment;

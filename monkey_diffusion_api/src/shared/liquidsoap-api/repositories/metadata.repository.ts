@@ -24,6 +24,7 @@ export class MetadataRepository {
       .set('year', metadata.year)
       .set('tracknumber', metadata.trackNumber)
       .set('date', metadata.tsPosted)
+      .set('url', metadata.imageUrl)
       .set('comment', JSON.stringify(metadata.comment));
 
     return this.liquidsoapApiService

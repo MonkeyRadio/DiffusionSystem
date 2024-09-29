@@ -6,12 +6,14 @@ import { MetadataDto } from './dto/metadata.dto';
 import { LiquidsoapApiService } from '@/shared/liquidsoap-api/liquidsoap-api.service';
 import { MetadataRequest } from '@/shared/liquidsoap-api/requests/metadata.request';
 import { PutMetadataDto } from './dto/put-metadata.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class MetadataService {
   public constructor(
     @InjectRedis() private readonly redisService: Redis,
     private readonly liquidsoapApiService: LiquidsoapApiService,
+    private readonly configService: ConfigService,
   ) {}
 
   public async current(
@@ -32,7 +34,7 @@ export class MetadataService {
     contentId: string,
     metadata: MetadataDto,
   ) {
-    const strRegex = /[^a-zA-Z0-9()éèêàâ\-_ .+-=/']/gi;
+    const strRegex = /[^a-zA-Z0-9()éèêàâëä\-_ .+-=/']/gi;
     const metadataRequest: MetadataRequest = {
       title: metadata.title.replace(strRegex, ''),
       artist: metadata.artist.replace(strRegex, ''),
@@ -40,6 +42,7 @@ export class MetadataService {
       year: metadata.year,
       trackNumber: metadata.trackNumber,
       duration: metadata.duration,
+      imageUrl: `${this.configService.get('cdnUrl')}/radio-${radioId}/${metadata.internalId.replace(strRegex, '')}`,
       tsPosted: metadata.tsPosted,
       comment: {
         internalId: metadata.internalId.replace(strRegex, ''),
