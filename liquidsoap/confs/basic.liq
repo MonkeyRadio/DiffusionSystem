@@ -7,6 +7,7 @@
 log.level := 2
 init.allow_root := true
 settings.harbor.bind_addrs := ["0.0.0.0"]
+settings.encoder.metadata.export := ["artist", "title", "album", "genre", "date", "tracknumber", "comment", "track", "year", "url"]
 
 harbor.http.static(port=8081, path="/", "/shared/certs/#{domain}/")
 
