@@ -33,6 +33,7 @@ export class HlsController {
     @Param('radioId') radioId: string,
     @Param('manifestId') manifestId: string,
     @Query('webapp-uuid') webappUuid: string,
+    @Query('origin') origin: string | undefined,
     @Request() req: Request,
     @Res() res: Response,
   ) {
@@ -45,6 +46,7 @@ export class HlsController {
         {
           listenerDetails: {
             webappUuid,
+            origin,
           },
         },
       );

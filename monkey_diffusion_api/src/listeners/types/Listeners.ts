@@ -17,4 +17,5 @@ export type ListenerTimings = {
 
 export type ListenersDetails = {
   webappUuid?: string;
+  origin?: string;
 };

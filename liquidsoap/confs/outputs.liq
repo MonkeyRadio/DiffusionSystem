@@ -37,7 +37,7 @@ def hls_output(stream, radio_id, stream_name)
   def segment_name(~position,~extname,stream_variant_name) =
     timestamp = int_of_float(time())
     duration = 4
-    "seg_#{timestamp}_#{position}.#{extname}"
+    "seg_#{stream_variant_name}_#{timestamp}_#{position}.#{extname}"
   end
 
   output.file.hls(playlist="#{stream_name}.m3u8",
