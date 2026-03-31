@@ -35,10 +35,11 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.icecast.rule=PathPrefix(`/v1/diffusion/ice`)"
+      - "traefik.http.routers.icecast.service=icecast"
       - "traefik.http.services.icecast.loadbalancer.server.port=8000"
-      - "traefik.http.middlewares.ice-replace.replacepathregex.regex=^/v1/diffusion/ice/(.*)"
-      - "traefik.http.middlewares.ice-replace.replacepathregex.replacement=/stream/$$1"
-      - "traefik.http.routers.icecast.middlewares=ice-replace"
+      - "traefik.http.middlewares.ice-strip.stripprefix.prefixes=/v1/diffusion/ice"
+      - "traefik.http.middlewares.ice-addprefix.addprefix.prefix=/stream"
+      - "traefik.http.routers.icecast.middlewares=ice-strip,ice-addprefix"
 
   reverse-proxy:
     image: traefik:v3.1
