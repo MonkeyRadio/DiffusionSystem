@@ -42,7 +42,7 @@ services:
       - "traefik.http.routers.icecast.middlewares=ice-strip,ice-addprefix"
 
   reverse-proxy:
-    image: traefik:v3.1.7
+    image: traefik:v3.6
     ports:
       - "$HTTP_PORT:80"
       - "$HTTPS_PORT:443"
